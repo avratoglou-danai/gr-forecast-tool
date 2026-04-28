@@ -5,12 +5,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GR Forecast Tool (Orders)</title>
+
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Excel parser -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- ONNX Runtime Web (GLOBAL) -->
+  <!-- ONNX Runtime Web (GLOBAL, NOT module) -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.3/dist/ort.min.js"></script>
 </head>
 
@@ -19,7 +20,7 @@
     <h1>GR Forecast Tool</h1>
     <p class="sub">
       Upload the Excel source, run forecasts, and get an Orders-based
-      “GOOD / OK / BAD” model health verdict.
+      GOOD / OK / BAD model health verdict.
     </p>
   </header>
 
@@ -34,9 +35,12 @@
           <div class="hint">Expected sheet: <b>0_Source_Forecast</b></div>
         </div>
 
+        <!-- MODEL IS AUTO-LOADED -->
         <div>
-          <label class="label">Model file (.onnx)</label>
-          <input id="modelInput" type="file" accept=".onnx" />
+          <label class="label">Model</label>
+          <div class="hint">
+            Using default approved model (auto‑loaded).
+          </div>
         </div>
 
         <div>
@@ -61,7 +65,7 @@
       </div>
 
       <div id="status" class="status">
-        Upload your Excel + ONNX model to begin.
+        Loading model…
       </div>
     </section>
 
@@ -70,6 +74,7 @@
       <div class="health">
         <div class="badge" id="verdictBadge">—</div>
       </div>
+      <div class="note" id="healthNote"></div>
     </section>
 
     <section class="card">
@@ -82,6 +87,9 @@
               <th>Actual Orders</th>
               <th>Pred Orders</th>
               <th>% Error (Orders)</th>
+              <th>Actual Sales</th>
+              <th>Pred Sales</th>
+              <th>% Error (Sales)</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -90,7 +98,7 @@
     </section>
   </main>
 
-  <!-- IMPORTANT: APP SCRIPTS LAST, NO type="module" -->
+  <!-- APP SCRIPTS (GLOBAL, NOT modules) -->
   <script src="kpi.js"></script>
   <script src="feature_engineering.js"></script>
   <script src="app.js"></script>
