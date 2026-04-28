@@ -1,17 +1,21 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GR Forecast Tool (Orders)</title>
+  <title>GR Forecast Tool</title>
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Fonts (clean, luxury-style) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Excel parser -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- ONNX Runtime Web (GLOBAL, NOT module) -->
+  <!-- ONNX Runtime Web -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.3/dist/ort.min.js"></script>
 </head>
 
@@ -19,7 +23,7 @@
   <header class="app-header">
     <h1>GR Forecast Tool</h1>
     <p class="sub">
-      Upload the Excel source, run forecasts, and get an Orders-based
+      Upload the Excel source, run forecasts, and get an Orders‑based
       GOOD / OK / BAD model health verdict.
     </p>
   </header>
@@ -35,25 +39,19 @@
           <div class="hint">Expected sheet: <b>0_Source_Forecast</b></div>
         </div>
 
-        <!-- MODEL IS AUTO-LOADED -->
-        <div>
-          <label class="label">Model</label>
-          <div class="hint">
-            Using default approved model (auto‑loaded).
-          </div>
-        </div>
-
         <div>
           <label class="label">Forecast mode</label>
           <select id="mode">
             <option value="rolling">Rolling forecast (next 7 days)</option>
-            <option value="scenario">Scenario forecast (multi-week)</option>
+            <option value="scenario">Scenario forecast (multi‑week)</option>
           </select>
         </div>
 
-        <div>
+        <!-- Scenario horizon (hidden by default) -->
+        <div id="scenarioBlock" class="stacked hidden">
           <label class="label">Scenario horizon (days)</label>
           <input id="horizon" type="number" min="7" max="84" value="28" />
+          <div class="hint">Used only for Scenario forecasts</div>
         </div>
       </div>
 
@@ -98,9 +96,10 @@
     </section>
   </main>
 
-  <!-- APP SCRIPTS (GLOBAL, NOT modules) -->
+  <!-- App scripts (global) -->
   <script src="kpi.js"></script>
   <script src="feature_engineering.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
+``
