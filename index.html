@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GR Forecast Tool (Orders)</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Excel parser (SheetJS) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- ONNX Runtime Web (WASM) -->
+  <script type="module">
+    import * as ort from "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.3/dist/ort.min.js";
+    window.ort = ort;
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>GR Forecast Tool</h1>
+    <p class="sub">Upload the Excel source, run forecasts, and get an Orders-based “GOOD / OK / BAD” model health verdict.</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>1) Inputs</h2>
+      <div class="grid">
+        <div>
+          <label class="label">Upload source Excel (.xlsx)</label>
+          <input id="fileInput" type="file" accept=".xlsx" />
+          <div class="hint">Expected sheet: <b>0_Source_Forecast</b></div>
+        </div>
+
+        <div>
+          <label class="label">Model file (.onnx)</label>
+          <input id="modelInput" type="file" accept=".onnx" />
+          <div class="hint">Tip: commit a default model to this repo and load it automatically (see README).</div>
+        </div>
+
+        <div>
+          <label class="label">Forecast mode</label>
+          <select id="mode">
+            <option value="rolling">Rolling forecast (next 7 days)</option>
+            <option value="scenario">Scenario forecast (multi-week)</option>
+          </select>
+          <div class="hint">Rolling is more accurate; Scenario is useful for what-if planning.</div>
+        </div>
+
+        <div>
+          <label class="label">Scenario horizon (days)</label>
+          <input id="horizon" type="number" min="7" max="84" step="1" value="28" />
+          <div class="hint">Used only for Scenario mode (7–84 days recommended).</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="runBtn" class="primary" disabled>Run forecast</button>
+        <button id="downloadBtn" class="secondary" disabled>Download results CSV</button>
+      </div>
+
+      <div id="status" class="status">Upload your Excel + ONNX model to begin.</div>
+    </section>
+
+    <section class="card">
+      <h2>2) Model health (Orders)</h2>
+      <div class="health">
+        <div class="badge" id="verdictBadge">—</div>
+        <div class="kpis" id="kpiCards">
+          <div class="kpi"><div class="k">Orders WMAPE (last 60)</div><div class="v" id="wmape60">—</div></div>
+          <div class="kpi"><div class="k">Orders Bias (last 60)</div><div class="v" id="bias60">—</div></div>
+          <div class="kpi"><div class="k">Non-event WMAPE (last 60)</div><div class="v" id="wmape60NE">—</div></div>
+          <div class="kpi"><div class="k">Event WMAPE (last 60)</div><div class="v" id="wmape60E">—</div></div>
+        </div>
+      </div>
+      <div class="note" id="healthNote"></div>
+    </section>
+
+    <section class="card">
+      <h2>3) Daily projections</h2>
+      <div class="table-wrap">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Actual Orders</th>
+              <th>Pred Orders</th>
+              <th>% Error (Orders)</th>
+              <th>Actual Sales</th>
+              <th>Pred Sales</th>
+              <th>% Error (Sales)</th>
+              <th>Singles Day</th>
+              <th>Black Friday</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <small>Client-side only. Data stays in your browser session.</small>
+    </footer>
+  </main>
+
+  <script type="module" src="kpi.js"></script>
+  <script type="module" src="feature_engineering.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
