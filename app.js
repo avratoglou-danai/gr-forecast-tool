@@ -38,27 +38,29 @@
   const MODEL_URL = "models/model.onnx";
 
   // IMPORTANT: this must match the ONNX training feature order
-  const FEATURE_ORDER = [
-    // Calendar
-    "dow", "month_num", "day_num", "weekofyear", "year_num",
+ const FEATURE_ORDER = [
+  // Calendar (5)
+  "dow", "month_num", "day_num", "weekofyear", "year_num",
 
-    // Activations
-    "% Discount (sitewide)", "% Discount (category)", "Free Shipping",
-    "PWP", "GWP", "Coupons", "Flat Disc", "KSM", "Holiday Season", "GWP Threshold",
-    "Singles Day", "Black Friday",
+  // Activations (12)
+  "% Discount (sitewide)", "% Discount (category)", "Free Shipping",
+  "PWP", "GWP", "Coupons", "Flat Disc", "KSM",
+  "Holiday Season", "GWP Threshold", "Singles Day", "Black Friday",
 
-    // Lags
-    "orders_lag_1", "orders_lag_2", "orders_lag_7", "orders_lag_14", "orders_lag_28",
-    "sales_lag_1", "sales_lag_2", "sales_lag_7", "sales_lag_14", "sales_lag_28",
+  // Lags (8)
+  "orders_lag_1", "orders_lag_7", "orders_lag_14", "orders_lag_28",
+  "sales_lag_1", "sales_lag_7", "sales_lag_14", "sales_lag_28",
 
-    // Rolling
-    "orders_roll_mean_7", "orders_roll_std_7", "orders_roll_mean_14", "orders_roll_std_14", "orders_roll_mean_28", "orders_roll_std_28",
-    "sales_roll_mean_7", "sales_roll_std_7", "sales_roll_mean_14", "sales_roll_std_14", "sales_roll_mean_28", "sales_roll_std_28",
+  // Rolling MEANS ONLY (6)
+  "orders_roll_mean_7", "orders_roll_mean_14", "orders_roll_mean_28",
+  "sales_roll_mean_7", "sales_roll_mean_14", "sales_roll_mean_28",
 
-    // Interactions
-    "disc_sitewide_x_ksm", "disc_cat_x_ksm", "flatdisc_x_ksm",
-    "singles_x_disc_sitewide", "bf_x_disc_sitewide"
-  ];
+  // Interactions (3)
+  "disc_sitewide_x_ksm",
+  "singles_x_disc_sitewide",
+  "bf_x_disc_sitewide"
+];
+``
 
   // Verdict thresholds (Orders-based)
   const TH = {
