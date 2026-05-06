@@ -4,28 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GR Forecast Tool</title>
+  <link rel="stylesheet" href="styles.css?v=34" />
 
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Fonts (clean, luxury-style) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-  <!-- Excel parser -->
+  <!-- Excel parser (SheetJS) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- ONNX Runtime Web -->
+  <!-- ONNX Runtime Web (GLOBAL) -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.3/dist/ort.min.js"></script>
 </head>
 
 <body>
   <header class="app-header">
     <h1>GR Forecast Tool</h1>
-    <p class="sub">
-      Upload the Excel source, run forecasts, and get an Orders‑based
-      GOOD / OK / BAD model health verdict.
-    </p>
+    <p class="sub">Upload the Excel source, run forecasts, and get an Orders-based GOOD / OK / BAD model health verdict.</p>
   </header>
 
   <main class="container">
@@ -43,34 +39,41 @@
           <label class="label">Forecast mode</label>
           <select id="mode">
             <option value="rolling">Rolling forecast (next 7 days)</option>
-            <option value="scenario">Scenario forecast (multi‑week)</option>
+            <option value="scenario">Scenario forecast (multi-week)</option>
           </select>
+          <div class="hint">Scenario horizon shows only when Scenario is selected.</div>
         </div>
 
-        <!-- Scenario horizon (hidden by default) -->
         <div id="scenarioBlock" class="stacked hidden">
           <label class="label">Scenario horizon (days)</label>
           <input id="horizon" type="number" min="7" max="84" value="28" />
           <div class="hint">Used only for Scenario forecasts</div>
         </div>
+
+        <div>
+          <label class="label">Model</label>
+          <div class="hint">Auto-loaded from <code>models/model.onnx</code> (approved model).</div>
+        </div>
       </div>
 
       <div class="actions">
         <button id="runBtn" class="primary" disabled>Run forecast</button>
-        <button id="downloadBtn" class="secondary" disabled>
-          Download results CSV
-        </button>
+        <button id="downloadBtn" class="secondary" disabled>Download results CSV</button>
       </div>
 
-      <div id="status" class="status">
-        Loading model…
-      </div>
+      <div id="status" class="status">Loading model…</div>
     </section>
 
     <section class="card">
       <h2>2) Model health (Orders)</h2>
       <div class="health">
         <div class="badge" id="verdictBadge">—</div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Orders WMAPE (last 60)</div><div class="v" id="wmape60">—</div></div>
+          <div class="kpi"><div class="k">Orders Bias (last 60)</div><div class="v" id="bias60">—</div></div>
+          <div class="kpi"><div class="k">Non-event WMAPE (last 60)</div><div class="v" id="wmape60NE">—</div></div>
+          <div class="kpi"><div class="k">Event WMAPE (last 60)</div><div class="v" id="wmape60E">—</div></div>
+        </div>
       </div>
       <div class="note" id="healthNote"></div>
     </section>
@@ -88,18 +91,19 @@
               <th>Actual Sales</th>
               <th>Pred Sales</th>
               <th>% Error (Sales)</th>
+              <th>Singles Day</th>
+              <th>Black Friday</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
+
+    <footer class="footer"><small>Client-side only. Data stays in your browser session.</small></footer>
   </main>
 
-  <!-- App scripts (global) -->
-  <script src="kpi.js"></script>
-  <script src="feature_engineering.js"></script>
-  <script src="app.js"></script>
+  <!-- IMPORTANT: Load app last; cache-busted -->
+  <script src="app.js?v=34"></script>
 </body>
 </html>
-``
